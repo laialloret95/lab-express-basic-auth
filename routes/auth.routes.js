@@ -10,7 +10,7 @@ router.get('/signup', (req, res, next) => {
 });
 
 router.get("/userProfile", (req, res) => {
-    res.render('user/user-profile');
+    res.render('user/user-profile', { user: req.session.currentUser });
 })
 
 router.post("/signup", (req, res) => {
@@ -33,6 +33,7 @@ router.get("/login", (req, res) => {
 })
 
 router.post("/login", (req,res, next) => {
+
     const { username, password } = req.body;
 
     // Check user provided both fields
@@ -48,7 +49,9 @@ router.post("/login", (req,res, next) => {
                 res.render("auth/login", {errorMessage: 'Username not registered'})
                 return;
             } else if (bcryptjs.compareSync(password, user.password)) {
-                res.render("user/user-profile", { user })
+                // Set Session when Login
+                req.session.currentUser = user;
+                return res.redirect("/userProfile")
             } else {
                 res.render('auth/login', { errorMessage: 'Incorrect Passrod'});
             }
