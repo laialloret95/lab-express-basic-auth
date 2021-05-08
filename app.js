@@ -39,5 +39,8 @@ app.use('/', index);
 const auth = require('./routes/auth.routes');
 app.use('/', auth);
 
+const private = require('./routes/private.routes');
+app.use('/', private);
+
 
 module.exports = app;
