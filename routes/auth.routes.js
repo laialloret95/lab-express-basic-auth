@@ -28,4 +28,32 @@ router.post("/signup", (req, res) => {
         })
 })
 
+router.get("/login", (req, res) => {
+    res.render("auth/login");
+})
+
+router.post("/login", (req,res, next) => {
+    const { username, password } = req.body;
+
+    // Check user provided both fields
+    if (!username || !password) {
+     res.render("auth/login", {errorMessage: 'Please enter both email and password'})
+     return;
+    };
+
+    // Check if user exists
+    UserModel.findOne({username})
+        .then(user => {
+            if (!user) {
+                res.render("auth/login", {errorMessage: 'Username not registered'})
+                return;
+            } else if (bcryptjs.compareSync(password, user.password)) {
+                res.render("user/user-profile", { user })
+            } else {
+                res.render('auth/login', { errorMessage: 'Incorrect Passrod'});
+            }
+        })
+        .catch( error => next(error))
+});
+
 module.exports = router;
