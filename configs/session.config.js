@@ -13,7 +13,7 @@ module.exports = app => {
                 maxAge: process.env.SESSION_MAX_AGE || 3600000
             },
             store: MongoStore.create ({
-                mongoUrl: 'mongodb://localhost/express-basic-auth-dev'
+                mongoUrl: process.env.MONGO_URL
             })
         })
     )
